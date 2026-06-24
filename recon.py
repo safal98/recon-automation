@@ -3,7 +3,6 @@
 import subprocess
 import os
 import sys
-import datetime
 
 
 def banner():
@@ -25,8 +24,18 @@ def section(title):
 
 
 def create_output_dir(domain):
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = f"recon_{domain}_{timestamp}"
+    base_dir = f"recon_{domain}"
+    os.makedirs(base_dir, exist_ok=True)
+
+    # count existing runs
+    existing = [
+        d for d in os.listdir(base_dir)
+        if d.startswith("run_")
+    ]
+
+    run_number = len(existing) + 1
+    output_dir = os.path.join(base_dir, f"run_{run_number}")
+
     os.makedirs(output_dir, exist_ok=True)
     return output_dir
 
